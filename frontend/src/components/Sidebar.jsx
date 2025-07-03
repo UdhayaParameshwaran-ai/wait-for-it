@@ -4,7 +4,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
   const tabs = ["about", "how it works"];
 
   return (
-    <nav className="mb-6 space-x-4 text-md justify-around flex flex-row">
+    <nav className="mb-6 space-x-4 text-md justify-center md:justify-around flex flex-wrap">
       {tabs.map((tab) => (
         <button
           key={tab}

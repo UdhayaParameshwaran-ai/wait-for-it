@@ -271,52 +271,68 @@ function ViewNote() {
   };
 
   return (
-    <div className="note-box">
-      {error ? (
-        <p className="error-message">{error}</p>
-      ) : note ? (
-        <>
-          <p>
-            <strong>From:</strong> {note.sender}
-          </p>
-          <p>
-            <strong>To:</strong> {note.receiver}
-          </p>
-          <p>
-            <strong>Message:</strong> {note.message}
-          </p>
-          <p>
-            <strong>Reveal Date: </strong>
-            {new Intl.DateTimeFormat("en-GB", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: true,
-            }).format(new Date(note.revealDate))}{" "}
-          </p>
-          <div className="share-buttons">
-            <button className="copy-button" onClick={copyToClipboard}>
-              {copyButtonText}
-            </button>
-            <button className="whatsapp-button" onClick={shareOnWhatsApp}>
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
-                alt="WhatsApp"
-                className="whatsapp-icon"
-              />
-              WhatsApp
-            </button>
-            <button className="image-button" onClick={handleSaveAsImage}>
-              Save As Image
-            </button>
-          </div>
-        </>
-      ) : (
-        <p>Loading note...</p>
-      )}
-    </div>
+    <div className="px-4 py-10 min-h-[calc(97vh-105px)] bg-[#F3E9FF] flex justify-center items-center font-montserrat">
+  <div className="note-box w-full max-w-2xl bg-white rounded-2xl shadow-lg border border-[#E5D5FA] p-6 space-y-4 text-[#14051E]">
+    {error ? (
+      <p className="error-message text-red-600 text-center font-medium">{error}</p>
+    ) : note ? (
+      <>
+        <p className="text-sm md:text-base">
+          <strong>From:</strong> {note.sender}
+        </p>
+        <p className="text-sm md:text-base">
+          <strong>To:</strong> {note.receiver}
+        </p>
+        <p className="text-sm md:text-base break-words whitespace-pre-wrap">
+          <strong>Message:</strong> {note.message}
+        </p>
+        <p className="text-sm md:text-base">
+          <strong>Reveal Date:</strong>{" "}
+          {new Intl.DateTimeFormat("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          }).format(new Date(note.revealDate))}
+        </p>
+
+        
+        <div className="share-buttons flex flex-col sm:flex-row flex-wrap gap-4 pt-4 justify-center sm:justify-start">
+          <button
+            onClick={copyToClipboard}
+            className="copy-button px-4 py-2 bg-[#50125F] text-white rounded-full hover:bg-[#3A0D45] transition"
+          >
+            {copyButtonText}
+          </button>
+
+          <button
+            onClick={shareOnWhatsApp}
+            className="whatsapp-button flex items-center gap-2 px-4 py-2 border border-[#25D366] text-[#25D366] rounded-full hover:bg-[#25D366]/10 transition"
+          >
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+              alt="WhatsApp"
+              className="whatsapp-icon w-5 h-5"
+            />
+            WhatsApp
+          </button>
+
+          <button
+            onClick={handleSaveAsImage}
+            className="image-button px-4 py-2 border border-[#50125F] text-[#50125F] rounded-full hover:bg-[#50125F] hover:text-white transition"
+          >
+            Save As Image
+          </button>
+        </div>
+      </>
+    ) : (
+      <p className="text-center">Loading note...</p>
+    )}
+  </div>
+</div>
+
   );
 }
 

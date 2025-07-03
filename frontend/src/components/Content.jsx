@@ -2,7 +2,7 @@ import React from "react";
 
 const Content = ({ activeTab }) => {
   return (
-    <div className="leading-relaxed max-w-lg">
+    <div className="pt-25 leading-relaxed max-w-lg mx-auto px-4">
       {activeTab === "about" && (
         <div className="transition text-center">
           <p className="text-lg my-25 pl-10 space-y-1 ">
