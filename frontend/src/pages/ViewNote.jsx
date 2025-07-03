@@ -202,7 +202,7 @@ function ViewNote() {
 
     if (note) {
       const noteLink = `${baseURL}/notes/${id}?key=${encryptionKey}`;
-      const whatsappMessage = `🎁✨ *Psst! A SecretNote from ${note.sender} awaits you, ${note.receiver}!* ✨🎁\n 🕰️ Unwrap the secret here: 👇\n ${noteLink}`;
+      const whatsappMessage = `🎁✨ Hey ${note.receiver}, ${note.sender} special left you a note...👉 Open it here: ${noteLink}`;
       const whatsappURL = `https://wa.me/?text=${encodeURIComponent(
         whatsappMessage
       )}`;
@@ -213,8 +213,8 @@ function ViewNote() {
   // Handler for saving the note as an image
   const handleSaveAsImage = () => {
     // Select the note-box and header elements from the DOM.
-    const noteElement = document.querySelector(".note-box");
-    const headerElement = document.querySelector(".header-container"); // ensure this class exists in your Header component
+    const noteElement = document.querySelector("#note-div");
+    const headerElement = document.querySelector("#head"); // ensure this class exists in your Header component
 
     if (!noteElement || !headerElement) {
       alert("Required elements for screenshot not found!");
@@ -223,10 +223,10 @@ function ViewNote() {
 
     // Create a container to hold both the header and the note content
     const screenshotContainer = document.createElement("div");
-    screenshotContainer.style.backgroundColor = "#ffecd2"; // set background color
+    screenshotContainer.style.backgroundColor = "#F3E9FF"; // set background color
     screenshotContainer.style.padding = "20px"; // add padding
-    screenshotContainer.style.paddingLeft = "60px";
-    screenshotContainer.style.display = "inline-block";
+    // screenshotContainer.style.paddingLeft = "50px";
+    screenshotContainer.style.display = "flex";
     screenshotContainer.style.borderRadius = "8px";
 
     // Clone header and note elements
@@ -261,7 +261,7 @@ function ViewNote() {
         const dataUrl = canvas.toDataURL("image/png");
         const link = document.createElement("a");
         link.href = dataUrl;
-        link.download = `sweetnote-${id}.png`;
+        link.download = `secretnote-${id}.png`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -272,67 +272,70 @@ function ViewNote() {
 
   return (
     <div className="px-4 py-10 min-h-[calc(97vh-105px)] bg-[#F3E9FF] flex justify-center items-center font-montserrat">
-  <div className="note-box w-full max-w-2xl bg-white rounded-2xl shadow-lg border border-[#E5D5FA] p-6 space-y-4 text-[#14051E]">
-    {error ? (
-      <p className="error-message text-red-600 text-center font-medium">{error}</p>
-    ) : note ? (
-      <>
-        <p className="text-sm md:text-base">
-          <strong>From:</strong> {note.sender}
-        </p>
-        <p className="text-sm md:text-base">
-          <strong>To:</strong> {note.receiver}
-        </p>
-        <p className="text-sm md:text-base break-words whitespace-pre-wrap">
-          <strong>Message:</strong> {note.message}
-        </p>
-        <p className="text-sm md:text-base">
-          <strong>Reveal Date:</strong>{" "}
-          {new Intl.DateTimeFormat("en-GB", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-          }).format(new Date(note.revealDate))}
-        </p>
+      <div
+        id="note-div"
+        className="note-box w-full max-w-2xl bg-white rounded-2xl shadow-lg border border-[#E5D5FA] p-6 space-y-4 text-[#14051E]"
+      >
+        {error ? (
+          <p className="error-message text-red-600 text-center font-medium">
+            {error}
+          </p>
+        ) : note ? (
+          <>
+            <p className="text-sm md:text-base">
+              <strong>From:</strong> {note.sender}
+            </p>
+            <p className="text-sm md:text-base">
+              <strong>To:</strong> {note.receiver}
+            </p>
+            <p className="text-sm md:text-base break-words whitespace-pre-wrap">
+              <strong>Message:</strong> {note.message}
+            </p>
+            <p className="text-sm md:text-base">
+              <strong>Reveal Date:</strong>{" "}
+              {new Intl.DateTimeFormat("en-GB", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true,
+              }).format(new Date(note.revealDate))}
+            </p>
 
-        
-        <div className="share-buttons flex flex-col sm:flex-row flex-wrap gap-4 pt-4 justify-center sm:justify-start">
-          <button
-            onClick={copyToClipboard}
-            className="copy-button px-4 py-2 bg-[#50125F] text-white rounded-full hover:bg-[#3A0D45] transition"
-          >
-            {copyButtonText}
-          </button>
+            <div className="share-buttons flex flex-col sm:flex-row flex-wrap gap-4 pt-4 justify-center sm:justify-start">
+              <button
+                onClick={copyToClipboard}
+                className="copy-button px-4 py-2 bg-[#50125F] text-white rounded-full hover:bg-[#3A0D45] transition"
+              >
+                {copyButtonText}
+              </button>
 
-          <button
-            onClick={shareOnWhatsApp}
-            className="whatsapp-button flex items-center gap-2 px-4 py-2 border border-[#25D366] text-[#25D366] rounded-full hover:bg-[#25D366]/10 transition"
-          >
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
-              alt="WhatsApp"
-              className="whatsapp-icon w-5 h-5"
-            />
-            WhatsApp
-          </button>
+              <button
+                onClick={shareOnWhatsApp}
+                className="whatsapp-button flex justify-center items-center gap-2 px-4 py-2 border border-[#25D366] text-[#25D366] rounded-full hover:bg-[#25D366]/10 transition"
+              >
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+                  alt="WhatsApp"
+                  className="whatsapp-icon w-5 h-5"
+                />
+                WhatsApp
+              </button>
 
-          <button
-            onClick={handleSaveAsImage}
-            className="image-button px-4 py-2 border border-[#50125F] text-[#50125F] rounded-full hover:bg-[#50125F] hover:text-white transition"
-          >
-            Save As Image
-          </button>
-        </div>
-      </>
-    ) : (
-      <p className="text-center">Loading note...</p>
-    )}
-  </div>
-</div>
-
+              <button
+                onClick={handleSaveAsImage}
+                className="image-button px-4 py-2 border border-[#50125F] text-[#50125F] rounded-full hover:bg-[#50125F] hover:text-white transition"
+              >
+                Save As Image
+              </button>
+            </div>
+          </>
+        ) : (
+          <p className="text-center">Loading note...</p>
+        )}
+      </div>
+    </div>
   );
 }
 
