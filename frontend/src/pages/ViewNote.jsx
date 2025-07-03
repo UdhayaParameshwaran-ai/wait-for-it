@@ -271,7 +271,7 @@ function ViewNote() {
   };
 
   return (
-    <div className="px-4 py-10 min-h-[calc(97vh-105px)] bg-[#F3E9FF] flex justify-center items-center font-montserrat">
+    <div className="px-4 py-10 min-h-[calc(96vh-105px)] bg-[#F3E9FF] flex justify-center items-center font-montserrat">
       <div
         id="note-div"
         className="note-box w-full max-w-2xl bg-white rounded-2xl shadow-lg border border-[#E5D5FA] p-6 space-y-4 text-[#14051E]"
