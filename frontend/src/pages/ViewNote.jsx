@@ -81,7 +81,7 @@ function ViewNote() {
             setNote({
               sender: data.sender,
               receiver: data.receiver,
-              message: data.message, // This Sweetnote is still hidden! 🤫
+              message: data.message,
               revealDate: data.revealDate,
             });
             // setError("Failed to fetch the note.");
