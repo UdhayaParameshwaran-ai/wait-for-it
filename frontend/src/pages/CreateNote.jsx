@@ -57,7 +57,7 @@ function CreateNote() {
   };
 
   return (
-    <div className="min-h-[calc(97vh-105px)] w-full bg-[#F3E9FF]">
+    <div className="min-h-[calc(96vh-105px)] w-full bg-[#F3E9FF]">
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-3xl mx-auto px-4 md:px-12 py-6 md:pt-20 space-y-4 md:space-y-6"

@@ -76,7 +76,7 @@ const YourNotes = () => {
   };
 
   return (
-    <div className="your-notes-container px-4 py-8 bg-[#F3E9FF] min-h-[calc(97vh-105px)] font-montserrat flex flex-col">
+    <div className="your-notes-container px-4 py-8 bg-[#F3E9FF] min-h-[calc(96vh-105px)] font-montserrat flex flex-col">
       {error && (
         <div className="error-message text-red-600 text-center font-semibold mb-4">
           {error}
