@@ -21,10 +21,7 @@ webpush.setVapidDetails(
 
 // MongoDB Connection
 mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(process.env.MONGO_URI)
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
@@ -164,46 +161,6 @@ app.post("/subscribe", async (req, res) => {
     res.status(500).json({ error: "Failed to save subscription" });
   }
 });
-
-// Check for notes that need to be revealed
-// Set up an interval to check for notes to reveal every minute (60000ms)
-// Scheduled task to send notifications when reveal time has passed
-setInterval(async () => {
-  const now = new Date();
-  try {
-    // Find subscriptions with revealDate passed which are not yet notified
-    const subscriptionsToNotify = await Subscription.find({
-      revealDate: { $lte: now },
-      notified: false,
-    });
-
-    for (const sub of subscriptionsToNotify) {
-      // Get the note details
-      const note = await Note.findById(sub.noteId);
-
-      if (!note) continue;
-
-      const payload = JSON.stringify({
-        title: "🎁✨ Sweetnotes Reveal! 🎁✨",
-        body: `*Psst! Sweetnote from ${note.sender} for ${note.receiver} is ready to be read!* `,
-        data: { url: `https://sweetnotes.art/notes/${sub.noteId}` },
-      });
-      try {
-        await webpush.sendNotification(sub.subscription, payload);
-        sub.notified = true;
-        await sub.save();
-        console.log(`Notification sent for subscription ${sub._id}`);
-      } catch (err) {
-        console.error(
-          `Error sending notification for subscription ${sub._id}:`,
-          err
-        );
-      }
-    }
-  } catch (error) {
-    console.error("Error in notification scheduler:", error);
-  }
-}, 30000); // Check every 30s
 
 // Start Server
 const PORT = process.env.PORT || 5000;
