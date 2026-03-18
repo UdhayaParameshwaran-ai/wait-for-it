@@ -7,7 +7,7 @@
  */
 
 import { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import html2canvas from "html2canvas";
 import { decryptMessage } from "../utils/crypto";
 import { fetchNote } from "../services/api";
@@ -15,7 +15,6 @@ import type { DisplayNote } from "../types";
 
 const ViewNote: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [searchParams, setSearchParams] = useSearchParams();
   const [note, setNote] = useState<DisplayNote | null>(null);
   const [error, setError] = useState("");
   const [copyButtonText, setCopyButtonText] = useState("Copy Link");
@@ -26,6 +25,10 @@ const ViewNote: React.FC = () => {
   /**
    * Step 1: Resolve the encryption key.
    *
+   * Why hash fragment: The key is in `#key=` instead of `?key=` so it
+   * is never sent to the server, logged in access logs, or leaked via
+   * referrer headers.
+   *
    * Why localStorage fallback: When a user returns via a push notification
    * or bookmark, the URL might not contain the key. We store it on first
    * visit so subsequent visits can still decrypt.
@@ -33,23 +36,23 @@ const ViewNote: React.FC = () => {
   useEffect(() => {
     if (!id) return;
 
-    const keyFromUrl = searchParams.get("key");
+    const hash = window.location.hash;
+    const keyFromHash = hash.startsWith("#key=") ? hash.slice(5) : null;
 
-    if (keyFromUrl) {
-      setEncryptionKey(keyFromUrl);
-      localStorage.setItem(`note-key-${id}`, keyFromUrl);
+    if (keyFromHash) {
+      setEncryptionKey(keyFromHash);
+      localStorage.setItem(`note-key-${id}`, keyFromHash);
     } else {
       const storedKey = localStorage.getItem(`note-key-${id}`);
       if (storedKey) {
         setEncryptionKey(storedKey);
-        setSearchParams({ key: storedKey });
       } else {
         setError(
           "Missing encryption key! Please use the original link provided by the sender."
         );
       }
     }
-  }, [id, searchParams, setSearchParams]);
+  }, [id]);
 
   /**
    * Step 2: Fetch the note and decrypt if the reveal date has passed.
@@ -103,8 +106,7 @@ const ViewNote: React.FC = () => {
 
   /** Copies the full share link (with encryption key) to the clipboard. */
   const copyToClipboard = () => {
-    const key = searchParams.get("key");
-    const noteLink = `${baseURL}/notes/${id}?key=${key}`;
+    const noteLink = `${baseURL}/notes/${id}#key=${encryptionKey}`;
 
     if (navigator.clipboard?.writeText) {
       navigator.clipboard
@@ -147,8 +149,7 @@ const ViewNote: React.FC = () => {
   const shareOnWhatsApp = () => {
     if (!note || !id) return;
 
-    const key = searchParams.get("key");
-    const noteLink = `${baseURL}/notes/${id}?key=${key}`;
+    const noteLink = `${baseURL}/notes/${id}#key=${encryptionKey}`;
     const whatsappMessage = `Hey ${note.receiver}, ${note.sender} left you a note... Open it here: ${noteLink}`;
     const whatsappURL = `https://wa.me/?text=${encodeURIComponent(whatsappMessage)}`;
     window.open(whatsappURL, "_blank");

@@ -57,7 +57,7 @@ const CreateNote: React.FC = () => {
        * A future improvement should use a URL hash fragment (#key=)
        * instead, since fragments are not sent to the server.
        */
-      navigate(`/notes/${data.id}?key=${key}`);
+      navigate(`/notes/${data.id}#key=${key}`);
     } catch (err) {
       const msg =
         err instanceof Error ? err.message : "An error occurred. Please try again.";
